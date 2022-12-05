@@ -7,6 +7,19 @@ const taskRouter = require('./routers/task')
 const app = express()
 const port = process.env.PORT || 3000
 
+// app.use((req, res, next) => {
+//     if (req.method === 'GET') {
+//         res.send('GET requests are disabled')
+//     } else {
+//         next()
+//     }
+// })
+
+// Maintenance mode
+// app.use((req, res, next) => {
+//     res.status(503).send('Site is under maintenance right now. Try again later!')
+// })
+
 // Configure Express
 app.use(express.json())     // Automatically parse JSON requests
 app.use(userRouter)         // Use router for user route handlers
@@ -16,15 +29,3 @@ app.use(taskRouter)         // Use router for task route handlers
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`)
 })
-
-const jwt = require('jsonwebtoken')
-
-const myFunc = async () => {
-    const token = jwt.sign({ _id: 'idd2' }, 'mykeyishere', { expiresIn: '7 days' })
-    console.log(token)
-
-    const data = jwt.verify(token, 'mykeyishere')
-    console.log(data)
-}
-
-myFunc()
