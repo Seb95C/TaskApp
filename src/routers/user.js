@@ -4,6 +4,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const multer = require('multer')
 //const sharp = require('sharp')
+const Jimp = require('jimp')
 const { sendWelcomeEmail, sendGoodbyEmail } = require('../emails/account')
 const { route } = require('express/lib/application')
 
@@ -100,7 +101,10 @@ const upload = multer({
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
     // const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
     // req.user.avatar = buffer
-    req.user.avatar = req.file.buffer
+    const immage = await Jimp.read(req.file.buffer)
+    await immage.resize(200, 200)
+    req.user.avatar = await immage.getBufferAsync(Jimp.MIME_PNG)
+    //req.user.avatar = req.file.buffer
     await req.user.save()
     res.send()
 }, (error, req, res, next) => {
